@@ -3,7 +3,6 @@
 #include <OneWire.h>
 #include <avr/eeprom.h>
 #include <LCD_1602_RUS.h>
-#include <Button.h>
 
 #define BCKLIGHT_TIMEOUT 20       //sec
 #define QUIET_MODE_TIMEOUT 50     //minutes
@@ -368,7 +367,6 @@ void menu_temp()
                 pointer = (pointer + 1) % 5;
         }
 
-        // lcd.clear();
 
         if (pointer < 2)
         {
