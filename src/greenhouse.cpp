@@ -218,7 +218,7 @@ void update_params()
 void main_screen()
 {
     lcd.setCursor(0, 0);
-    lcd.print(F("Temp: "));
+    lcd.print(L"Темпер: ");
     lcd.print(current_temperature);
     static int prev_temp = 0;
     if (current_temperature != prev_temp)
@@ -230,12 +230,12 @@ void main_screen()
     if (alarm_on)
     {
         lcd.setCursor(9, 0);
-        lcd.print(F("Trevoga"));
+        lcd.print(L"Тревога");
 
         if (alarm_mode == 0)
         {
             lcd.setCursor(0, 1);
-            lcd.print(F("Tixiy"));
+            lcd.print(L"Тихий");
             lcd.setCursor(11, 1);
             lcd.print(rest_time_quiet);
         }
@@ -308,16 +308,16 @@ void menu_relay()
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("Hazad"));
+            lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print((params[4] ? F("py4Hoe") : F("by tеmpеr.")));
+            lcd.print((params[4] ? L"Ручное" : L"По темпер"));
         }
         else
         {
             if (params[4])
             {
                 lcd.setCursor(1, 0);
-                lcd.print((params[5] ? F("Relay on") : F("Relay off")));
+                lcd.print((params[5] ? L"Реле вкл" : L"Реле выкл" ));
             }
         }
         print_pointer(pointer, is_choosed);
@@ -371,24 +371,24 @@ void menu_temp()
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("Hazad"));
+            lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print(F("MinAlrmTemp "));
+            lcd.print(L"МинТемпТрев ");
             lcd.print(params[0]);
         }
         else if (pointer < 4)
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("RelayOnTemp "));
+            lcd.print(L"ТемпВклРеле ");
             lcd.print(params[1]);
             lcd.setCursor(1, 1);
-            lcd.print(F("PompOffTemp "));
+            lcd.print(L"ТемпВыклРел ");
             lcd.print(params[2]);
         }
         else
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("MaxAlrmTemp "));
+            lcd.print(L"МаксТемпТрев ");
             lcd.print(params[3]);
         }
         print_pointer(pointer, is_choosed);
@@ -442,16 +442,16 @@ void menu_alarm()
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("Hazad"));
+            lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print(F("By temp. "));
-            lcd.print((params[6] ? F("YES") : F("NO")));
+            lcd.print(L"По темпер "));
+            lcd.print((params[6] ? L"Да" : L"Нет");
         }
         else
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("By voltage "));
-            lcd.print((params[7] ? F("YES") : F("NO")));
+            lcd.print(L"По напряж "));
+            lcd.print((params[7] ? L"Да" : L"Нет");
         }
         print_pointer(pointer, is_choosed);
     }
@@ -505,15 +505,15 @@ void menu_timer()
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("Hazad"));
+            lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print(F("Backlgt, s "));
+            lcd.print(L"ДлтьПодсвет с")
             lcd.print(params[8]);
         }
         else
         {
             lcd.setCursor(1, 0);
-            lcd.print(F("No sound, m "));
+            lcd.print(L"ДлтьТихРеж м")
             lcd.print(params[9]);
         }
         print_pointer(pointer, is_choosed);
@@ -600,33 +600,33 @@ void menu_lcd()
     case 1:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(L"Настройки");
         lcd.setCursor(1, 1);
-        lcd.print(F("Relay"));
+        lcd.print(L"управл реле");
         break;
     }
     case 2:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(L"Настройки");
         lcd.setCursor(1, 1);
-        lcd.print(F("Termostat"));
+        lcd.print(L"границы темпер");
         break;
     }
     case 3:
     {
-        lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.setCursor3, 0);
+        lcd.print(L"Настройки");
         lcd.setCursor(1, 1);
-        lcd.print(F("Sound alarm"));
+        lcd.print(L"сигнализации");
         break;
     }
     case 4:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+       lcd.print(L"Настройки");
         lcd.setCursor(1, 1);
-        lcd.print(F("Timeout"));
+        lcd.print(L"таймаутов");
         break;
     }
     }
