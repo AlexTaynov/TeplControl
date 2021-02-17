@@ -444,14 +444,14 @@ void menu_alarm()
             lcd.setCursor(1, 0);
             lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print(L"По темпер "));
-            lcd.print((params[6] ? L"Да" : L"Нет");
+            lcd.print(L"По темпер ");
+            lcd.print(params[6] ? L"Да" : L"Нет");
         }
         else
         {
             lcd.setCursor(1, 0);
-            lcd.print(L"По напряж "));
-            lcd.print((params[7] ? L"Да" : L"Нет");
+            lcd.print(L"По напряж ");
+            lcd.print(params[7] ? L"Да" : L"Нет");
         }
         print_pointer(pointer, is_choosed);
     }
@@ -507,13 +507,13 @@ void menu_timer()
             lcd.setCursor(1, 0);
             lcd.print(L"Назад");
             lcd.setCursor(1, 1);
-            lcd.print(L"ДлтьПодсвет с")
+            lcd.print(L"ДлтьПодсвет с");
             lcd.print(params[8]);
         }
         else
         {
             lcd.setCursor(1, 0);
-            lcd.print(L"ДлтьТихРеж м")
+            lcd.print(L"ДлтьТихРеж м");
             lcd.print(params[9]);
         }
         print_pointer(pointer, is_choosed);
@@ -615,7 +615,7 @@ void menu_lcd()
     }
     case 3:
     {
-        lcd.setCursor3, 0);
+        lcd.setCursor(3, 0);
         lcd.print(L"Настройки");
         lcd.setCursor(1, 1);
         lcd.print(L"сигнализации");
