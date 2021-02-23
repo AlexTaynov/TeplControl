@@ -9,6 +9,7 @@
 #define DS18_POLLING_TIMEOUT 2000 //ms
 #define CLEAR_LCD_IN_MS 200       //ms
 
+#define INACTION_TIMEOUT 30
 #define INCREMENTING_TIME_FOR_QUIET_TIMER 10 //minutes
 #define DECREMENTING_TIME_FOR_QUIET_TIMER 10 //minutes
 #define DELTA 1                              // температурная дельта, градусов
@@ -34,6 +35,7 @@ GTimer backlight_timer(MS);
 GTimer quiet_mode_timer(MS);
 GTimer ds18_polling_timer(MS);
 GTimer clear_lcd(MS);
+GTimer return_timer(MS);
 
 int current_temperature = 0;
 String rest_time_quiet = "99:99";
@@ -263,6 +265,10 @@ void menu_relay()
     bool is_choosed = false;
     while (true)
     {
+         if(return_timer.isReady()) {
+            return_timer.start();
+            return;
+        }
         ok_button.tick();
         inc_button.tick();
         dec_button.tick();
@@ -330,6 +336,10 @@ void menu_temp()
     bool is_choosed = false;
     while (true)
     {
+         if(return_timer.isReady()) {
+            return_timer.start();
+            return;
+        }
         ok_button.tick();
         inc_button.tick();
         dec_button.tick();
@@ -400,6 +410,10 @@ void menu_alarm()
     bool is_choosed = false;
     while (true)
     {
+         if(return_timer.isReady()) {
+            return_timer.start();
+            return;
+        }
 
         ok_button.tick();
         inc_button.tick();
@@ -462,6 +476,10 @@ void menu_timer()
     bool is_choosed = false;
     while (true)
     {
+        if(return_timer.isReady()) {
+            return_timer.start();
+            return;
+        }
         ok_button.tick();
         inc_button.tick();
         dec_button.tick();
@@ -528,6 +546,16 @@ void menu_lcd()
     dec_button.tick();
 
     static byte pointer = 0;
+    static byte prev_pointer = 0;
+
+    if(prev_pointer != pointer && pointer != 0){
+        return_timer.setTimeout(INACTION_TIMEOUT * 1000);
+        prev_pointer = pointer;
+    }
+    if(return_timer.isReady() && pointer != 0){
+        prev_pointer = 0;
+        pointer = 0;
+    }
 
     enable_backlight();
 
