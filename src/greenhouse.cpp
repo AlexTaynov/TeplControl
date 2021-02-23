@@ -267,6 +267,7 @@ void menu_relay()
     {
          if(return_timer.isReady()) {
             return_timer.start();
+            lcd.clear(); 
             return;
         }
         ok_button.tick();
@@ -338,6 +339,7 @@ void menu_temp()
     {
          if(return_timer.isReady()) {
             return_timer.start();
+            lcd.clear(); 
             return;
         }
         ok_button.tick();
@@ -412,6 +414,7 @@ void menu_alarm()
     {
          if(return_timer.isReady()) {
             return_timer.start();
+            lcd.clear(); 
             return;
         }
 
@@ -478,6 +481,7 @@ void menu_timer()
     {
         if(return_timer.isReady()) {
             return_timer.start();
+            lcd.clear(); 
             return;
         }
         ok_button.tick();
@@ -553,6 +557,7 @@ void menu_lcd()
         prev_pointer = pointer;
     }
     if(return_timer.isReady() && pointer != 0){
+        lcd.clear();
         prev_pointer = 0;
         pointer = 0;
     }
