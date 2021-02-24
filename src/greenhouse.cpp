@@ -37,7 +37,7 @@ GTimer ds18_polling_timer(MS);
 GTimer clear_lcd(MS);
 GTimer return_timer(MS);
 
-int current_temperature = 0;
+int current_temperature = 20;
 String rest_time_quiet = "99:99";
 byte alarm_on = 0;
 
@@ -214,7 +214,10 @@ void update_params()
         }
     }
     if (changed)
-        write_params_to_eeprom();
+        {
+            write_params_to_eeprom();
+            init_timers();
+        }
 }
 
 void main_screen()
@@ -255,6 +258,7 @@ void enable_backlight()
     if (ok_button.isPress() || dec_button.isPress() || inc_button.isPress())
     {
         backlight_timer.start();
+        return_timer.start();
         lcd.clear();
     }
 }
@@ -265,9 +269,10 @@ void menu_relay()
     bool is_choosed = false;
     while (true)
     {
-         if(return_timer.isReady()) {
+        if (return_timer.isReady())
+        {
             return_timer.start();
-            lcd.clear(); 
+            lcd.clear();
             return;
         }
         ok_button.tick();
@@ -275,11 +280,6 @@ void menu_relay()
         dec_button.tick();
 
         enable_backlight();
-
-        if (!backlight_timer.isEnabled() && (ok_button.isClick() || dec_button.isClick() || inc_button.isClick()))
-        {
-            return;
-        }
 
         if (ok_button.isClick())
         {
@@ -337,9 +337,10 @@ void menu_temp()
     bool is_choosed = false;
     while (true)
     {
-         if(return_timer.isReady()) {
+        if (return_timer.isReady())
+        {
             return_timer.start();
-            lcd.clear(); 
+            lcd.clear();
             return;
         }
         ok_button.tick();
@@ -379,7 +380,6 @@ void menu_temp()
                 pointer = (pointer + 1) % 5;
         }
 
-
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
@@ -412,9 +412,10 @@ void menu_alarm()
     bool is_choosed = false;
     while (true)
     {
-         if(return_timer.isReady()) {
+        if (return_timer.isReady())
+        {
             return_timer.start();
-            lcd.clear(); 
+            lcd.clear();
             return;
         }
 
@@ -479,9 +480,10 @@ void menu_timer()
     bool is_choosed = false;
     while (true)
     {
-        if(return_timer.isReady()) {
+        if (return_timer.isReady())
+        {
             return_timer.start();
-            lcd.clear(); 
+            lcd.clear();
             return;
         }
         ok_button.tick();
@@ -552,27 +554,29 @@ void menu_lcd()
     static byte pointer = 0;
     static byte prev_pointer = 0;
 
-    if(prev_pointer != pointer && pointer != 0){
+    if (prev_pointer != pointer && pointer != 0)
+    {
         return_timer.setTimeout(INACTION_TIMEOUT * 1000);
         prev_pointer = pointer;
     }
-    if(return_timer.isReady() && pointer != 0){
+    if (return_timer.isReady() && pointer != 0)
+    {
         lcd.clear();
         prev_pointer = 0;
         pointer = 0;
+    }
+
+    backlight_timer.isReady();
+    if (!backlight_timer.isEnabled() && (ok_button.isClick() || dec_button.isClick() || inc_button.isClick()))
+    {
+        enable_backlight();
+        return;
     }
 
     enable_backlight();
 
     if (inc_button.isClick())
     {
-
-        if (!backlight_timer.isEnabled())
-        {
-            backlight_timer.start();
-            return;
-        }
-
         backlight_timer.start();
 
         if (pointer - 1 < 0)
@@ -583,12 +587,6 @@ void menu_lcd()
 
     if (dec_button.isClick())
     {
-
-        if (!backlight_timer.isEnabled())
-        {
-            backlight_timer.start();
-            return;
-        }
         backlight_timer.start();
 
         pointer = (pointer + 1) % 5;
@@ -597,12 +595,6 @@ void menu_lcd()
 
     if (ok_button.isClick())
     {
-
-        if (!backlight_timer.isEnabled())
-        {
-            backlight_timer.start();
-            return;
-        }
         lcd.clear();
         backlight_timer.start();
         switch (pointer)
@@ -633,7 +625,7 @@ void menu_lcd()
     case 1:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(F("Setunings"));
         lcd.setCursor(1, 1);
         lcd.print(F("Relay"));
         break;
@@ -641,7 +633,7 @@ void menu_lcd()
     case 2:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(F("Setunings"));
         lcd.setCursor(1, 1);
         lcd.print(F("Termostat"));
         break;
@@ -649,7 +641,7 @@ void menu_lcd()
     case 3:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(F("Setunings"));
         lcd.setCursor(1, 1);
         lcd.print(F("Sound alarm"));
         break;
@@ -657,7 +649,7 @@ void menu_lcd()
     case 4:
     {
         lcd.setCursor(3, 0);
-        lcd.print(F("Settunings"));
+        lcd.print(F("Setunings"));
         lcd.setCursor(1, 1);
         lcd.print(F("Timeout"));
         break;
@@ -665,18 +657,23 @@ void menu_lcd()
     }
 }
 
-void setup()
+void init_timers()
 {
-    init_pins();
-    init_params();
-    lcd.init();
-
     ds18b20_timer.setInterval(750);
     backlight_timer.setTimeout(params[8] * 1000);
     ds18_polling_timer.setInterval(DS18_POLLING_TIMEOUT);
     clear_lcd.setInterval(CLEAR_LCD_IN_MS);
     melody_timer.setInterval(200);
+}
+
+void setup()
+{
+    init_pins();
+    init_params();
+    lcd.init();
+    init_timers();
     get_temperature();
+    delay(1000);
     // Serial.begin(9600);
 }
 
@@ -684,7 +681,6 @@ void loop()
 {
     for (;;)
     {
-
         if (ds18_polling_timer.isReady())
         {
             get_temperature();
