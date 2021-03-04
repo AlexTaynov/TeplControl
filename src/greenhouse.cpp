@@ -253,15 +253,6 @@ void print_pointer(int8_t cursor, bool isChoosen)
     lcd.print(!isChoosen ? F(">") : F("~"));
 }
 
-void enable_backlight()
-{
-    if (ok_button.isPress() || dec_button.isPress() || inc_button.isPress())
-    {
-        backlight_timer.start();
-        lcd.clear();
-    }
-}
-
 void menu_relay()
 {
     byte pointer = 0;
@@ -278,39 +269,48 @@ void menu_relay()
         inc_button.tick();
         dec_button.tick();
 
-        enable_backlight();
-
         if (ok_button.isClick())
         {
             return_timer.start();
             lcd.clear();
-            if (pointer != 0)
+            if (backlight_timer.isEnabled())
+            {
+                if (pointer == 0)
+                    return;
                 is_choosed = !is_choosed;
-            else
-                return;
+            }
+            backlight_timer.start();
         }
 
         if (inc_button.isClick() || inc_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer + 3] ^= 1;
-            else
+            if (backlight_timer.isEnabled())
             {
-                if (pointer - 1 < 0)
-                    pointer += 3;
-                pointer = (pointer - 1) % (3 - !params[4]);
+                if (is_choosed && pointer != 0)
+                    params[pointer + 3] ^= 1;
+                else
+                {
+                    if (pointer - 1 < 0)
+                        pointer += 3;
+                    pointer = (pointer - 1) % (3 - !params[4]);
+                }
             }
+            backlight_timer.start();
         }
         if (dec_button.isClick() || dec_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer + 3] ^= 1;
-            else
-                pointer = (pointer + 1) % (3 - !params[4]);
+            if (backlight_timer.isEnabled())
+            {
+                if (is_choosed && pointer != 0)
+                    params[pointer + 3] ^= 1;
+                else
+                    pointer = (pointer + 1) % (3 - !params[4]);
+            }
+            backlight_timer.start();
         }
 
         if (pointer < 2)
@@ -348,40 +348,48 @@ void menu_temp()
         inc_button.tick();
         dec_button.tick();
 
-        enable_backlight();
-        if (pointer == 0 && ok_button.isClick())
-        {
-            lcd.clear();
-            return;
-        }
         if (ok_button.isClick())
         {
-            return_timer.start();
-            is_choosed = !is_choosed;
             lcd.clear();
+            return_timer.start();
+            if (backlight_timer.isEnabled())
+            {
+                if (pointer == 0)
+                    return;
+                is_choosed = !is_choosed;
+            }
+            backlight_timer.start();
         }
 
         if (inc_button.isClick() || inc_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer - 1] += 1;
-            else
+            if (backlight_timer.isEnabled())
             {
-                if (pointer - 1 < 0)
-                    pointer += 5;
-                pointer = (pointer - 1) % 5;
+                if (is_choosed && pointer != 0)
+                    params[pointer - 1] += 1;
+                else
+                {
+                    if (pointer - 1 < 0)
+                        pointer += 5;
+                    pointer = (pointer - 1) % 5;
+                }
             }
+            backlight_timer.start();
         }
         if (dec_button.isClick() || dec_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer - 1] -= 1;
-            else
-                pointer = (pointer + 1) % 5;
+            if (backlight_timer.isEnabled())
+            {
+                if (is_choosed && pointer != 0)
+                    params[pointer - 1] -= 1;
+                else
+                    pointer = (pointer + 1) % 5;
+            }
+            backlight_timer.start();
         }
 
         if (pointer < 2)
@@ -426,40 +434,49 @@ void menu_alarm()
         ok_button.tick();
         inc_button.tick();
         dec_button.tick();
-        enable_backlight();
-        if (pointer == 0 && ok_button.isClick())
-        {
-            lcd.clear();
-            return;
-        }
+
         if (ok_button.isClick())
         {
-            return_timer.start();
-            is_choosed = !is_choosed;
             lcd.clear();
+            return_timer.start();
+            if (backlight_timer.isEnabled())
+            {
+                if (pointer == 0)
+                    return;
+                is_choosed = !is_choosed;
+            }
+            backlight_timer.start();
         }
 
         if (inc_button.isClick() || inc_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer + 5] ^= 1;
-            else
+            if (backlight_timer.isEnabled())
             {
-                if (pointer - 1 < 0)
-                    pointer += 3;
-                pointer = (pointer - 1) % 3;
+                if (is_choosed && pointer != 0)
+                    params[pointer + 5] ^= 1;
+                else
+                {
+                    if (pointer - 1 < 0)
+                        pointer += 3;
+                    pointer = (pointer - 1) % 3;
+                }
             }
+            backlight_timer.start();
         }
         if (dec_button.isClick() || dec_button.isHold())
         {
             return_timer.start();
             lcd.clear();
-            if (is_choosed && pointer != 0)
-                params[pointer + 5] ^= 1;
-            else
-                pointer = (pointer + 1) % 3;
+            if (backlight_timer.isEnabled())
+            {
+                if (is_choosed && pointer != 0)
+                    params[pointer + 5] ^= 1;
+                else
+                    pointer = (pointer + 1) % 3;
+            }
+            backlight_timer.start();
         }
 
         // lcd.clear();
@@ -496,41 +513,51 @@ void menu_timer()
         ok_button.tick();
         inc_button.tick();
         dec_button.tick();
-        enable_backlight();
-        if (pointer == 0 && ok_button.isClick())
-        {
-            lcd.clear();
-            return;
-        }
+
         if (ok_button.isClick())
         {
-            is_choosed = !is_choosed;
             lcd.clear();
+            if (backlight_timer.isEnabled())
+            {
+                if (pointer == 0)
+                    return;
+                is_choosed = !is_choosed;
+            }
+            backlight_timer.start();
             return_timer.start();
         }
 
         if (inc_button.isClick() || inc_button.isHold())
         {
+
             lcd.clear();
             return_timer.start();
-
-            if (is_choosed && pointer != 0)
-                params[pointer + 7] += 1;
-            else
+            if (backlight_timer.isEnabled())
             {
-                if (pointer - 1 < 0)
-                    pointer += 3;
-                pointer = (pointer - 1) % 3;
+                if (is_choosed && pointer != 0)
+                    params[pointer + 7] += 1;
+                else
+                {
+                    if (pointer - 1 < 0)
+                        pointer += 3;
+                    pointer = (pointer - 1) % 3;
+                }
             }
+            backlight_timer.start();
         }
+
         if (dec_button.isClick() || dec_button.isHold())
         {
             lcd.clear();
             return_timer.start();
-            if (is_choosed && pointer != 0)
-                params[pointer + 7] -= 1;
-            else
-                pointer = (pointer + 1) % 3;
+            if (backlight_timer.isEnabled())
+            {
+                if (is_choosed && pointer != 0)
+                    params[pointer + 7] -= 1;
+                else
+                    pointer = (pointer + 1) % 3;
+            }
+            backlight_timer.start();
         }
 
         // lcd.clear();
@@ -555,7 +582,6 @@ void menu_timer()
 
 void menu_lcd()
 {
-
     ok_button.tick();
     inc_button.tick();
     dec_button.tick();
@@ -567,51 +593,63 @@ void menu_lcd()
         lcd.clear();
         pointer = 0;
     }
-    
 
     if (inc_button.isClick())
     {
+        return_timer.start();
+        if (backlight_timer.isEnabled())
+        {
+            if (pointer - 1 < 0)
+                pointer += 5;
+            pointer = (pointer - 1) % 5;
+            if (pointer != 0)
+                return_timer.setTimeout(INACTION_TIMEOUT * 1000);
+        }
 
-        if (pointer - 1 < 0)
-            pointer += 5;
-        pointer = (pointer - 1) % 5;
-        if (pointer != 0)
-            return_timer.setTimeout(INACTION_TIMEOUT * 1000);
+        backlight_timer.start();
         lcd.clear();
     }
 
     if (dec_button.isClick())
     {
-       
-        lcd.clear();
         return_timer.start();
-        pointer = (pointer + 1) % 5;
-        if (pointer != 0)
-            return_timer.setTimeout(INACTION_TIMEOUT * 1000);
+        if (backlight_timer.isEnabled())
+        {
+            pointer = (pointer + 1) % 5;
+            if (pointer != 0)
+                return_timer.setTimeout(INACTION_TIMEOUT * 1000);
+        }
+        backlight_timer.start();
+        lcd.clear();
     }
 
     if (ok_button.isClick())
     {
-        
-        lcd.clear();
-        switch (pointer)
-        {
-        case 1:
-            menu_relay();
-            break;
-        case 2:
-            menu_temp();
-            break;
-        case 3:
-            menu_alarm();
-            break;
-        case 4:
-            menu_timer();
-            break;
 
-        default:
-            break;
+        lcd.clear();
+        return_timer.start();
+        if (backlight_timer.isEnabled())
+        {
+            switch (pointer)
+            {
+            case 1:
+                menu_relay();
+                break;
+            case 2:
+                menu_temp();
+                break;
+            case 3:
+                menu_alarm();
+                break;
+            case 4:
+                menu_timer();
+                break;
+
+            default:
+                break;
+            }
         }
+        backlight_timer.start();
     }
 
     switch (pointer)
@@ -652,8 +690,6 @@ void menu_lcd()
         break;
     }
     }
-
-    enable_backlight();
 }
 
 void init_timers()
@@ -673,7 +709,7 @@ void setup()
     init_timers();
     get_temperature();
     delay(1000);
-     Serial.begin(9600);
+    Serial.begin(9600);
 }
 
 void loop()
@@ -706,8 +742,8 @@ void loop()
             do_alarm();
         }
 
-        backlight_control();
         menu_lcd();
+        backlight_control();
         process_temperature();
         update_params();
     }
