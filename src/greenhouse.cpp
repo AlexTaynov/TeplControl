@@ -560,7 +560,6 @@ void menu_timer()
             backlight_timer.start();
         }
 
-
         if (pointer < 2)
         {
             lcd.setCursor(1, 0);
@@ -631,6 +630,8 @@ void menu_lcd()
         {
             switch (pointer)
             {
+            case 0:
+                break;
             case 1:
                 menu_relay();
                 break;
@@ -643,15 +644,13 @@ void menu_lcd()
             case 4:
                 menu_timer();
                 break;
-
-            default:
-                break;
             }
         }
         backlight_timer.start();
     }
 
-    if(ok_button.isDouble()){
+    if (ok_button.isDouble())
+    {
         params[4] = 1;
         params[5] ^= 1;
     }
@@ -703,6 +702,7 @@ void init_timers()
     ds18_polling_timer.setInterval(DS18_POLLING_TIMEOUT);
     clear_lcd.setInterval(CLEAR_LCD_IN_MS);
     melody_timer.setInterval(200);
+    return_timer.setTimeout(INACTION_TIMEOUT * 1000);
 }
 
 void setup()
@@ -713,7 +713,7 @@ void setup()
     init_timers();
     get_temperature();
     delay(1000);
-    Serial.begin(9600);
+    // Serial.begin(9600);
 }
 
 void loop()
