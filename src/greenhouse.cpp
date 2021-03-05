@@ -560,7 +560,6 @@ void menu_timer()
             backlight_timer.start();
         }
 
-        // lcd.clear();
 
         if (pointer < 2)
         {
@@ -650,6 +649,11 @@ void menu_lcd()
             }
         }
         backlight_timer.start();
+    }
+
+    if(ok_button.isDouble()){
+        params[4] = 1;
+        params[5] ^= 1;
     }
 
     switch (pointer)
